@@ -45,11 +45,12 @@ if __name__ == '__main__':
         eval_delta: int = 5
         num_data_workers: int = 5
         save_dir: Optional[str] = None
-        root_dir: str = './save'
+        root_dir: str = '/net/scratch/yiboj/mem-llm'
         config_file: Optional[str] = None
         exp_id: int=1
         eval: bool = False
         eval_path: Optional[str] = None
+        device: str="cpu"
 
     args = TrainerArgs(
             optim_args=OptimArgs(),
@@ -63,6 +64,8 @@ if __name__ == '__main__':
     else:
         cfg = cfg_before_merge
 
+    cfg.device = "cuda" if torch.cuda.is_available() else "cpu"
+
     if cfg.save_dir is not None:
         outdir = Path(cfg.root_dir) / Path(cfg.save_dir)
         outdir.mkdir(parents=True, exist_ok=True)
@@ -72,7 +75,7 @@ if __name__ == '__main__':
         cfg.model_args.vocab_size = ds.vocab_size
 
         model = SelfAttention(cfg.model_args,
-                    vocab_size=cfg.model_args.vocab_size)
+                    vocab_size=cfg.model_args.vocab_size).to(cfg.device)
 
         # optim
         if cfg.optim_args.use_sgd:
@@ -96,8 +99,8 @@ if __name__ == '__main__':
             if cfg.max_iters is not None and i >= cfg.max_iters:
                 break
 
-            x = torch.from_numpy(x)
-            y = torch.from_numpy(y)
+            x = torch.from_numpy(x).to(cfg.device)
+            y = torch.from_numpy(y).to(cfg.device)
 
             optimizer.zero_grad()
             pred = model(x)

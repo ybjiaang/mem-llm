@@ -6,6 +6,6 @@ model_args:
   dim: 1024
 data_args:
   n_concept: 9
-  seq_len: 512
+  seq_len: 1024
   nb_mem: 512
   piece_rate: 0.8
