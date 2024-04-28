@@ -2,7 +2,7 @@
 
 # basin of attraction
 # nb_concepts=(6 7 8 9)
-nb_concepts=(9)
+nb_concepts=(5 6 7 8)
 # nb_concepts=("config/config_n6.yaml", "config/config_n7.yaml", "config/config_n8.yaml", "config/config_n9.yaml")
 exp_ids=(0 1 2 3 4 5 6 7 8 9)
 # exp_ids=(0)
@@ -13,7 +13,7 @@ do
 for EXP_ID in "${exp_ids[@]}"
 do
 
-CONFIG=config/config_n${NB_CONCEPTS}.yaml
+CONFIG=config/standard/config_n${NB_CONCEPTS}.yaml
 
 echo $CONFIG, $EXP_ID
 export CONFIG EXP_ID
