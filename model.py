@@ -28,10 +28,8 @@ class ModelArgs:
     no_first_layer_ffn: bool = False
     freeze_output: bool = False
     tie_output: bool = False
-    freeze_wv: bool = False
-    freeze_wo: bool = False
-    no_wo: bool = False
-    no_wv: bool = True
+    no_wo: bool = True
+    no_wv: bool = False
     freeze_wv: bool = False
     freeze_wo: bool = False
     freeze_wqk: bool = False
@@ -60,7 +58,6 @@ class SelfAttention(nn.Module):
         freeze_embed=args.freeze_embed
         no_wo=args.no_wo
         no_wv=args.no_wv
-
 
         super().__init__()
         assert dim % n_heads == 0

@@ -6,10 +6,6 @@ import random
 import torch.nn.functional as F
 import multiprocess as mp
 
-def sort_bin(b):
-    b_view = np.ascontiguousarray(b).view(np.dtype((np.void, b.dtype.itemsize * b.shape[1])))
-    return b[np.argsort(b_view.ravel())] #as per Divakar's suggestion
-
 @dataclass
 class DataArgs:
     n_concept: int = 4
