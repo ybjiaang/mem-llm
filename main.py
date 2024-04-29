@@ -142,6 +142,8 @@ if __name__ == '__main__':
     else:
         filenames = get_filenames(cfg.eval_path)
 
+
+        eval_list = []
         for exp_i, filename in enumerate(filenames):
 
             # create_one_hot_encoding(args)
@@ -152,8 +154,6 @@ if __name__ == '__main__':
             cfg = checkpoint['config']
 
             cfg.model_args.vocab_size = ds.vocab_size
-
-            print(checkpoint['training_loss'])
 
             model = SelfAttention(cfg.model_args,
                     vocab_size=cfg.model_args.vocab_size)
@@ -176,4 +176,6 @@ if __name__ == '__main__':
 
                 eval_acc = (pred[:,-1,:].argmax(-1) == y[:,-1]).float().mean().item()
 
-                print(eval_acc)
+                eval_list.append(eval_acc)
+
+        print(eval_list)

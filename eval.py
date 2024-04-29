@@ -3,7 +3,25 @@ from omegaconf import OmegaConf
 import yaml
 import os
 from pathlib import Path
+import subprocess
 
+def run_command(command):
+    try:
+        # Run the command and capture its output
+        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        
+        # Check if the command executed successfully
+        if result.returncode == 0:
+            # If successful, return the output
+            return result.stdout
+        else:
+            # If there was an error, print the error message
+            print("Error:", result.stderr)
+            return None
+    except FileNotFoundError:
+        print("No file found")
+        return None
+    
 def get_filenames(directory_path):
     filenames = []
     # List all files in the directory
@@ -58,26 +76,26 @@ def save_no_wv_configs(config, config_save_path=None):
 
 if __name__ == "__main__":
 
-    allfilenames = get_filenames("standard")
+    allfilenames = get_filenames("config")
+    # root_dir = '/net/scratch/yiboj/mem-llm'
+
+    root_dir = "./"
 
     for filname in allfilenames:
-        
-        config = load_config_file(filname)
-        """ save no_wv configs"""
-        if not os.path.exists("no_wv"):
-            os.makedirs("no_wv")
-        save_no_wv_configs(config)
-    # Load configuration from the specified YAML file
-    # config = load_config_file(args.config_file_path)
+        if "yaml" in filname:
+            config = load_config_file(filname)
 
-    # if config:
-    #     # Modify the configuration
-    #     modified_config = modify_config(config, args.key, args.value)
+            save_dir = Path(root_dir) / Path(config.save_dir)
 
-    #     if modified_config:
-    #         # Save the modified configuration back to the same file
-    #         save_config_file(modified_config, args.config_file_path)
-    #     else:
-    #         print("Failed to modify configuration. Exiting...")
-    # else:
-    #     print("Configuration file not loaded. Exiting...")
+            try:
+                cmd = "python main.py eval=True eval_path=" + str(save_dir)
+
+                result = run_command(cmd)
+                print(str(save_dir))
+                print(result)
+
+            except FileNotFoundError:
+                print("File not Found")
+
+
+
