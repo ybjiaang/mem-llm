@@ -57,7 +57,7 @@ def save_no_wv_configs(config):
 def save_dim_freeze_configs(config):
     n_concept = config.data_args.n_concept
     modified_config = modify_config(config, "model_args.freeze_embed", True)
-    modified_config = modify_config(config, "save_dir", "/net/scratch/yiboj/mem-llm/dim")
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/dim")
 
     for dim in [16, 32, 64, 128, 256, 512]:
         modified_config = modify_config(config, "save_dir", "./dim_freeze_n" + str(n_concept)+ "_d" + str(dim) )
@@ -71,7 +71,7 @@ def save_dim_freeze_configs(config):
 def save_dim_no_freeze_configs(config):
     n_concept = config.data_args.n_concept
     modified_config = modify_config(config, "model_args.freeze_embed", False)
-    modified_config = modify_config(config, "save_dir", "/net/scratch/yiboj/mem-llm/dim")
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/dim")
 
     for dim in [16, 32, 64, 128, 256, 512]:
         modified_config = modify_config(config, "save_dir", "./dim_no_freeze_n" + str(n_concept)+ "_d" + str(dim) )

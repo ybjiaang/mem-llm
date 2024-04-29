@@ -76,7 +76,7 @@ def save_no_wv_configs(config, config_save_path=None):
 
 if __name__ == "__main__":
 
-    allfilenames = get_filenames("config/dim_no_freeze")
+    allfilenames = get_filenames("config/dim_freeze")
     root_dir = '/net/scratch/yiboj/mem-llm/dim'
 
     # root_dir = "./"
