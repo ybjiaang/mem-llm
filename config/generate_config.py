@@ -94,10 +94,12 @@ if __name__ == "__main__":
             os.makedirs("no_wv")
         save_no_wv_configs(config)
 
+        config = load_config_file(filname)
         if not os.path.exists("dim_freeze"):
             os.makedirs("dim_freeze")
         save_dim_freeze_configs(config)
 
+        config = load_config_file(filname)
         if not os.path.exists("dim_no_freeze"):
             os.makedirs("dim_no_freeze")
         save_dim_no_freeze_configs(config)
