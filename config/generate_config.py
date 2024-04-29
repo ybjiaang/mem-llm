@@ -45,7 +45,7 @@ def save_config_file(config, config_file_path):
         print(f"Error saving configuration file: {e}")
 
 
-def save_no_wv_configs(config, config_save_path=None):
+def save_no_wv_configs(config):
     n_concept = config.data_args.n_concept
     modified_config = modify_config(config, "model_args.no_wv", True)
     modified_config = modify_config(config, "save_dir", "./no_wv_" + str(n_concept))
@@ -54,7 +54,33 @@ def save_no_wv_configs(config, config_save_path=None):
     save_config_file(modified_config, "no_wv/" + "config_n" + str(n_concept) +".yaml")
 
 
+def save_dim_freeze_configs(config):
+    n_concept = config.data_args.n_concept
+    modified_config = modify_config(config, "model_args.freeze_embed", True)
+    modified_config = modify_config(config, "save_dir", "/net/scratch/yiboj/mem-llm/dim")
 
+    for dim in [16, 32, 64, 128, 256, 512]:
+        modified_config = modify_config(config, "save_dir", "./dim_freeze_n" + str(n_concept)+ "_d" + str(dim) )
+        if dim <=32:
+            modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
+        else:
+            modified_config = modify_config(config, "optim_args.learning_rate", 0.001)
+
+        save_config_file(modified_config, "dim_freeze/" + "config_n" + str(n_concept) + "_d" + str(dim) +".yaml")
+
+def save_dim_no_freeze_configs(config):
+    n_concept = config.data_args.n_concept
+    modified_config = modify_config(config, "model_args.freeze_embed", False)
+    modified_config = modify_config(config, "save_dir", "/net/scratch/yiboj/mem-llm/dim")
+
+    for dim in [16, 32, 64, 128, 256, 512]:
+        modified_config = modify_config(config, "save_dir", "./dim_no_freeze_n" + str(n_concept)+ "_d" + str(dim) )
+        if dim <=32:
+            modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
+        else:
+            modified_config = modify_config(config, "optim_args.learning_rate", 0.001)
+
+        save_config_file(modified_config, "dim_no_freeze/" + "config_n" + str(n_concept) + "_d" + str(dim) +".yaml")
 
 if __name__ == "__main__":
 
@@ -67,6 +93,16 @@ if __name__ == "__main__":
         if not os.path.exists("no_wv"):
             os.makedirs("no_wv")
         save_no_wv_configs(config)
+
+        if not os.path.exists("dim_freeze"):
+            os.makedirs("dim_freeze")
+        save_dim_freeze_configs(config)
+
+        if not os.path.exists("dim_no_freeze"):
+            os.makedirs("dim_no_freeze")
+        save_dim_no_freeze_configs(config)
+
+
     # Load configuration from the specified YAML file
     # config = load_config_file(args.config_file_path)
 
