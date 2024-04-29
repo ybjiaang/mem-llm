@@ -77,9 +77,9 @@ def save_no_wv_configs(config, config_save_path=None):
 if __name__ == "__main__":
 
     allfilenames = get_filenames("config")
-    # root_dir = '/net/scratch/yiboj/mem-llm'
+    root_dir = '/net/scratch/yiboj/mem-llm'
 
-    root_dir = "./"
+    # root_dir = "./"
 
     for filname in allfilenames:
         if "yaml" in filname:
