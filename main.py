@@ -179,3 +179,6 @@ if __name__ == '__main__':
                 eval_list.append(eval_acc)
 
         print(eval_list)
+        print(np.average(eval_list))
+        from scipy import stats
+        print(stats.sem(eval_list))

@@ -13,7 +13,7 @@ do
 for EXP_ID in "${exp_ids[@]}"
 do
 
-CONFIG=config/standard/config_n${NB_CONCEPTS}.yaml
+CONFIG=config/no_wv/config_n${NB_CONCEPTS}.yaml
 
 echo $CONFIG, $EXP_ID
 export CONFIG EXP_ID
