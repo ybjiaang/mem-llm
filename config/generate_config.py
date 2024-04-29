@@ -3,7 +3,27 @@ from omegaconf import OmegaConf
 import yaml
 import os
 from pathlib import Path
+import subprocess
 
+def delete_files_in_folder(folder_path):
+    # Check if the folder exists
+    if os.path.exists(folder_path):
+        # Iterate over the files in the folder
+        for file_name in os.listdir(folder_path):
+            # Construct the full path to the file
+            file_path = os.path.join(folder_path, file_name)
+            try:
+                # Attempt to remove the file
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                else:
+                    print(f"Skipped: {file_path} (not a file)")
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
+    else:
+        print(f"The folder '{folder_path}' does not exist.")
+
+    
 def get_filenames(directory_path):
     filenames = []
     # List all files in the directory
@@ -56,11 +76,14 @@ def save_no_wv_configs(config):
 
 def save_dim_freeze_configs(config):
     n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
     modified_config = modify_config(config, "model_args.freeze_embed", True)
     modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/dim")
 
     for dim in [16, 32, 64, 128, 256, 512]:
         modified_config = modify_config(config, "save_dir", "./dim_freeze_n" + str(n_concept)+ "_d" + str(dim) )
+        modified_config = modify_config(config, "model_args.dim", dim)
         if dim <=32:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
         else:
@@ -70,11 +93,14 @@ def save_dim_freeze_configs(config):
 
 def save_dim_no_freeze_configs(config):
     n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
     modified_config = modify_config(config, "model_args.freeze_embed", False)
     modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/dim")
 
     for dim in [16, 32, 64, 128, 256, 512]:
         modified_config = modify_config(config, "save_dir", "./dim_no_freeze_n" + str(n_concept)+ "_d" + str(dim) )
+        modified_config = modify_config(config, "model_args.dim", dim)
         if dim <=32:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
         else:
@@ -83,25 +109,37 @@ def save_dim_no_freeze_configs(config):
         save_config_file(modified_config, "dim_no_freeze/" + "config_n" + str(n_concept) + "_d" + str(dim) +".yaml")
 
 if __name__ == "__main__":
+    import shutil
 
     allfilenames = get_filenames("standard")
+
+    if not os.path.exists("no_wv"):
+        os.makedirs("no_wv")
+    else:
+        delete_files_in_folder("no_wv")
+
+    if not os.path.exists("dim_freeze"):
+        os.rmdir("dim_freeze")
+    else:
+        delete_files_in_folder("dim_freeze")
+
+    if not os.path.exists("dim_no_freeze"):
+        os.rmdir("dim_no_freeze")
+    else:
+        delete_files_in_folder("dim_no_freeze")
 
     for filname in allfilenames:
         
         config = load_config_file(filname)
         """ save no_wv configs"""
-        if not os.path.exists("no_wv"):
-            os.makedirs("no_wv")
+            
         save_no_wv_configs(config)
 
         config = load_config_file(filname)
-        if not os.path.exists("dim_freeze"):
-            os.makedirs("dim_freeze")
+
         save_dim_freeze_configs(config)
 
         config = load_config_file(filname)
-        if not os.path.exists("dim_no_freeze"):
-            os.makedirs("dim_no_freeze")
         save_dim_no_freeze_configs(config)
 
 
