@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # basin of attraction
-nb_concepts=(5 6 7 8)
-dims=(16 32 64 128 256 512)
+# nb_concepts=(5 6 7 8)
+nb_concepts=(8)
+# dims=(16 32 64 128 256 512)
+dims=(64)
 exp_ids=(0 1 2 3 4)
 # nb_concepts=(5)
 # dims=(16)
@@ -17,7 +19,7 @@ do
 for EXP_ID in "${exp_ids[@]}"
 do
 
-CONFIG=config/dim_freeze/config_n${NB_CONCEPTS}_d${DIM}.yaml
+CONFIG=config/dim_no_freeze/config_n${NB_CONCEPTS}_d${DIM}.yaml
 
 echo $CONFIG, $EXP_ID
 export CONFIG EXP_ID

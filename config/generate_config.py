@@ -106,6 +106,9 @@ def save_dim_no_freeze_configs(config):
         else:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.001)
 
+        if dim == 64 and n_concept==8:
+            modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
+
         save_config_file(modified_config, "dim_no_freeze/" + "config_n" + str(n_concept) + "_d" + str(dim) +".yaml")
 
 if __name__ == "__main__":
