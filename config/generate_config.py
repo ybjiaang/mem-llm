@@ -73,6 +73,16 @@ def save_no_wv_configs(config):
 
     save_config_file(modified_config, "no_wv/" + "config_n" + str(n_concept) +".yaml")
 
+def save_cluster_configs(config):
+    n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
+
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/cluster")
+    modified_config = modify_config(config, "data_args.cluster", True)
+    modified_config = modify_config(config, "save_dir", "./cluster_" + str(n_concept))
+
+    save_config_file(modified_config, "cluster/" + "config_n" + str(n_concept) +".yaml")
 
 def save_dim_freeze_configs(config):
     n_concept = config.data_args.n_concept
@@ -84,10 +94,13 @@ def save_dim_freeze_configs(config):
     for dim in [16, 32, 64, 128, 256, 512]:
         modified_config = modify_config(config, "save_dir", "./dim_freeze_n" + str(n_concept)+ "_d" + str(dim) )
         modified_config = modify_config(config, "model_args.dim", dim)
-        if dim <=32:
+        if dim <=64:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
         else:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.001)
+
+        if dim==128 and n_concept >= 7:
+            modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
 
         save_config_file(modified_config, "dim_freeze/" + "config_n" + str(n_concept) + "_d" + str(dim) +".yaml")
 
@@ -133,12 +146,12 @@ def save_dim_no_freeze_configs(config):
     for dim in [16, 32, 64, 128, 256, 512]:
         modified_config = modify_config(config, "save_dir", "./dim_no_freeze_n" + str(n_concept)+ "_d" + str(dim) )
         modified_config = modify_config(config, "model_args.dim", dim)
-        if dim <=32:
+        if dim <=64:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
         else:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.001)
 
-        if dim == 64 and n_concept==8:
+        if dim==128 and n_concept >= 7:
             modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
 
         save_config_file(modified_config, "dim_no_freeze/" + "config_n" + str(n_concept) + "_d" + str(dim) +".yaml")
@@ -173,6 +186,11 @@ if __name__ == "__main__":
     else:
         delete_files_in_folder("dim_no_freeze_sweep")
 
+    if not os.path.exists("cluster"):
+        os.makedirs("cluster")
+    else:
+        delete_files_in_folder("cluster")
+
     for filname in allfilenames:
         
         config = load_config_file(filname)
@@ -192,6 +210,9 @@ if __name__ == "__main__":
 
         config = load_config_file(filname)
         save_dim_no_freeze_sweep_configs(config)
+
+        config = load_config_file(filname)
+        save_cluster_configs(config)
 
 
     # Load configuration from the specified YAML file
