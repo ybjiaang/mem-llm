@@ -205,27 +205,11 @@ if __name__ == "__main__":
         config = load_config_file(filname)
         save_dim_no_freeze_configs(config)
 
-        config = load_config_file(filname)
-        save_dim_freeze_sweep_configs(config)
+        # config = load_config_file(filname)
+        # save_dim_freeze_sweep_configs(config)
 
-        config = load_config_file(filname)
-        save_dim_no_freeze_sweep_configs(config)
+        # config = load_config_file(filname)
+        # save_dim_no_freeze_sweep_configs(config)
 
         config = load_config_file(filname)
         save_cluster_configs(config)
-
-
-    # Load configuration from the specified YAML file
-    # config = load_config_file(args.config_file_path)
-
-    # if config:
-    #     # Modify the configuration
-    #     modified_config = modify_config(config, args.key, args.value)
-
-    #     if modified_config:
-    #         # Save the modified configuration back to the same file
-    #         save_config_file(modified_config, args.config_file_path)
-    #     else:
-    #         print("Failed to modify configuration. Exiting...")
-    # else:
-    #     print("Configuration file not loaded. Exiting...")
