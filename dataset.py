@@ -14,6 +14,7 @@ class DataArgs:
     piece_rate: float=0.8
     beta: float=1.0
     cluster: bool=False
+    cluster_n: int=1
 
 def sort_bin(b):
     b_view = np.ascontiguousarray(b).view(np.dtype((np.void, b.dtype.itemsize * b.shape[1])))
@@ -32,6 +33,7 @@ class Dataset:
         self.vocab_size = 2**self.n_concept + 1 # one extra token to mean unknown token, might be used later
         self.tok_range = list(np.arange(self.vocab_size))
         self.cluster_strategy = args.cluster
+        self.cluster_n = args.cluster_n
 
         assert self.nb_mem <= 2**self.n_concept
 
@@ -56,21 +58,35 @@ class Dataset:
             self.pi_prob[mem_ind] = prob
 
     def neighbors(self, target):
+        # the code could be simplified and I am writing this way to avoid problem with previous experiments
+        if self.cluster_strategy and self.cluster_n >=1:
+            target_mem = self.mem_patterns[target]
+            all_vectors = np.array(list(itertools.product([0, 1], repeat=self.n_concept)))
+            neighbor_vector_list = []
+            for vector in all_vectors:
+                if self.tokenize(vector) == self.tokenize(target_mem):
+                    continue
+                if (vector[:self.cluster_n] == target_mem[:self.cluster_n]).all():
+                    neighbor_vector_list.append(vector)
 
-        all_vectors = np.array(list(itertools.product([0, 1], repeat=self.n_concept)))
-        target_mem = self.mem_patterns[target]
+            return np.array(neighbor_vector_list)
+        else:
+            all_vectors = np.array(list(itertools.product([0, 1], repeat=self.n_concept)))
+            target_mem = self.mem_patterns[target]
 
-        indices_to_remove = np.where(np.all(all_vectors == target_mem, axis=1))[0].tolist()
-        if self.cluster_strategy:
-            cluster_id = 1-target_mem[0]
-            all_vectors_minus_one = np.array(list(itertools.product([0, 1], repeat=self.n_concept-1)))
-            for vector in all_vectors_minus_one:
-                vector_to_remove = np.insert(vector, 0, cluster_id)
-                indices_to_remove.append(self.tokenize(vector_to_remove))
+            indices_to_remove = np.where(np.all(all_vectors == target_mem, axis=1))[0].tolist()
+            if self.cluster_strategy:
+                cluster_id = 1-target_mem[0]
+                all_vectors_minus_one = np.array(list(itertools.product([0, 1], repeat=self.n_concept-1)))
+                for vector in all_vectors_minus_one:
+                    vector_to_remove = np.insert(vector, 0, cluster_id)
+                    indices_to_remove.append(self.tokenize(vector_to_remove))
 
-        indices_to_remove = np.unique(indices_to_remove)
+            indices_to_remove = np.unique(indices_to_remove)
 
-        return np.delete(all_vectors, indices_to_remove, axis=0)
+            return np.delete(all_vectors, indices_to_remove, axis=0)
+            
+
 
     def tokenize(self, vector):
         if vector[1] == -1:
