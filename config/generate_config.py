@@ -91,6 +91,38 @@ def save_dim_freeze_configs(config):
 
         save_config_file(modified_config, "dim_freeze/" + "config_n" + str(n_concept) + "_d" + str(dim) +".yaml")
 
+def save_dim_freeze_sweep_configs(config):
+    n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
+    modified_config = modify_config(config, "model_args.freeze_embed", True)
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/dim-lr-sweep")
+
+    for dim in [16, 32, 64, 128, 256, 512]:
+        for lr in [0.01, 0.001]:
+            modified_config = modify_config(config, "save_dir", "./dim_freeze_n" + str(n_concept)+ "_d" + str(dim) + "_lr" + str(lr))
+            modified_config = modify_config(config, "model_args.dim", dim)
+            modified_config = modify_config(config, "optim_args.learning_rate", lr)
+
+            save_config_file(modified_config, "dim_freeze_sweep/" + "config_n" + str(n_concept) + "_d" + str(dim)  + "_lr" + str(lr) +".yaml")
+
+
+def save_dim_no_freeze_sweep_configs(config):
+    n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
+    modified_config = modify_config(config, "model_args.freeze_embed", False)
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/dim-lr-sweep")
+
+    for dim in [16, 32, 64, 128, 256, 512]:
+        for lr in [0.01, 0.001]:
+            modified_config = modify_config(config, "save_dir", "./dim_no_freeze_n" + str(n_concept)+ "_d" + str(dim) + "_lr" + str(lr))
+            modified_config = modify_config(config, "model_args.dim", dim)
+            modified_config = modify_config(config, "optim_args.learning_rate", lr)
+
+            save_config_file(modified_config, "dim_no_freeze_sweep/" + "config_n" + str(n_concept) + "_d" + str(dim)  + "_lr" + str(lr) +".yaml")
+
+
 def save_dim_no_freeze_configs(config):
     n_concept = config.data_args.n_concept
     if n_concept >= 9:
@@ -122,14 +154,24 @@ if __name__ == "__main__":
         delete_files_in_folder("no_wv")
 
     if not os.path.exists("dim_freeze"):
-        os.rmdir("dim_freeze")
+        os.makedirs("dim_freeze")
     else:
         delete_files_in_folder("dim_freeze")
 
     if not os.path.exists("dim_no_freeze"):
-        os.rmdir("dim_no_freeze")
+        os.makedirs("dim_no_freeze")
     else:
         delete_files_in_folder("dim_no_freeze")
+
+    if not os.path.exists("dim_freeze_sweep"):
+        os.makedirs("dim_freeze_sweep")
+    else:
+        delete_files_in_folder("dim_freeze_sweep")
+
+    if not os.path.exists("dim_no_freeze_sweep"):
+        os.makedirs("dim_no_freeze_sweep")
+    else:
+        delete_files_in_folder("dim_no_freeze_sweep")
 
     for filname in allfilenames:
         
@@ -144,6 +186,12 @@ if __name__ == "__main__":
 
         config = load_config_file(filname)
         save_dim_no_freeze_configs(config)
+
+        config = load_config_file(filname)
+        save_dim_freeze_sweep_configs(config)
+
+        config = load_config_file(filname)
+        save_dim_no_freeze_sweep_configs(config)
 
 
     # Load configuration from the specified YAML file
