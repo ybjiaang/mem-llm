@@ -215,7 +215,19 @@ class Attention(nn.Module):
         output = torch.matmul(scores, x)  # (bs, n_heads, slen, head_dim)
 
         return output
+    
+    def get_attention_heatmap(self, x):
+        bs, slen, _ = x.shape
 
+        xq = self.wq(x).view(bs, slen, self.n_heads, self.head_dim)
+        xk = self.wk(x).view(bs, slen, self.n_heads, self.head_dim)
+
+        # change to (bs, n_heads, slen, head_dim)
+        xq, xk = xq.transpose(1, 2), xk.transpose(1, 2)
+        scores = torch.matmul(xq, xk.transpose(2, 3)) / math.sqrt(self.head_dim)
+        scores = F.softmax(scores.float(), dim=-1).type_as(x)
+
+        return scores
 
 class FeedForward(nn.Module):
     def __init__(self,
