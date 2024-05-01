@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import dirichlet
+from scipy import stats
 from dataclasses import dataclass
 import itertools
 import random
@@ -180,5 +181,4 @@ if __name__ == '__main__':
 
         print(eval_list)
         print(np.average(eval_list))
-        from scipy import stats
         print(stats.sem(eval_list))
