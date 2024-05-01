@@ -78,10 +78,10 @@ def save_cluster_configs(config, cluster_n=1):
     if n_concept >= 9:
         return 
 
-    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/cluster" + str(cluster_n))
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/cluster")
     modified_config = modify_config(config, "data_args.cluster", True)
     modified_config = modify_config(config, "data_args.cluster_n", cluster_n)
-    modified_config = modify_config(config, "save_dir", "./cluster_" + str(n_concept))
+    modified_config = modify_config(config, "save_dir", "./cluster_" + str(n_concept) + "_m"  + str(cluster_n))
 
     save_config_file(modified_config, "cluster/" + "config_n" + str(n_concept) + "_m"  + str(cluster_n) +".yaml")
 
