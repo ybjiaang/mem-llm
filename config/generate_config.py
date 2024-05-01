@@ -73,16 +73,17 @@ def save_no_wv_configs(config):
 
     save_config_file(modified_config, "no_wv/" + "config_n" + str(n_concept) +".yaml")
 
-def save_cluster_configs(config):
+def save_cluster_configs(config, cluster_n=1):
     n_concept = config.data_args.n_concept
     if n_concept >= 9:
         return 
 
-    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/cluster")
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/cluster" + str(cluster_n))
     modified_config = modify_config(config, "data_args.cluster", True)
+    modified_config = modify_config(config, "data_args.cluster_n", cluster_n)
     modified_config = modify_config(config, "save_dir", "./cluster_" + str(n_concept))
 
-    save_config_file(modified_config, "cluster/" + "config_n" + str(n_concept) +".yaml")
+    save_config_file(modified_config, "cluster/" + "config_n" + str(n_concept) + "_m"  + str(cluster_n) +".yaml")
 
 def save_dim_freeze_configs(config):
     n_concept = config.data_args.n_concept
@@ -213,3 +214,6 @@ if __name__ == "__main__":
 
         config = load_config_file(filname)
         save_cluster_configs(config)
+
+        config = load_config_file(filname)
+        save_cluster_configs(config, cluster_n=2)
