@@ -120,6 +120,22 @@ def save_dim_freeze_sweep_configs(config):
 
             save_config_file(modified_config, "dim_freeze_sweep/" + "config_n" + str(n_concept) + "_d" + str(dim)  + "_lr" + str(lr) +".yaml")
 
+def save_length_configs(config):
+    n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/length")
+
+    for dim in [16, 32, 64, 128]:
+        for lr in [0.01, 0.001]:
+            for length in [8, 16, 24, 32, 40, 48]:
+                modified_config = modify_config(config, "save_dir", "./length_n" + str(n_concept)+ "_d" + str(dim) + "_lr" + str(lr) + "_l" + str(length))
+                modified_config = modify_config(config, "model_args.dim", dim)
+                modified_config = modify_config(config, "data_args.seq_len", length)
+                modified_config = modify_config(config, "optim_args.learning_rate", lr)
+
+                save_config_file(modified_config, "length/" + "config_n" + str(n_concept) + "_d" + str(dim)  + "_lr" + str(lr) + "_l" + str(length) + ".yaml")
+
 
 def save_dim_no_freeze_sweep_configs(config):
     n_concept = config.data_args.n_concept
@@ -192,6 +208,11 @@ if __name__ == "__main__":
     else:
         delete_files_in_folder("cluster")
 
+    if not os.path.exists("length"):
+        os.makedirs("length")
+    else:
+        delete_files_in_folder("length")
+
     for filname in allfilenames:
         
         config = load_config_file(filname)
@@ -217,3 +238,6 @@ if __name__ == "__main__":
 
         config = load_config_file(filname)
         save_cluster_configs(config, cluster_n=2)
+
+        config = load_config_file(filname)
+        save_length_configs(config)

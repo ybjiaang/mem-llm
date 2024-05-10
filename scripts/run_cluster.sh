@@ -18,7 +18,7 @@ do
 for CLUSTER_N in "${cluster_n[@]}"
 do
 
-CONFIG=config/cluster/config_n${NB_CONCEPTS}_mn${CLUSTER_N}.yaml
+CONFIG=config/cluster/config_n${NB_CONCEPTS}_m${CLUSTER_N}.yaml
 
 echo $CONFIG, $EXP_ID
 export CONFIG EXP_ID
