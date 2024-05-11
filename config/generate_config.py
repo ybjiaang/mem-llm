@@ -73,6 +73,30 @@ def save_no_wv_configs(config):
 
     save_config_file(modified_config, "no_wv/" + "config_n" + str(n_concept) +".yaml")
 
+def save_no_wv_low_dim_configs(config):
+    n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/low")
+    modified_config = modify_config(config, "model_args.dim", 64)
+    modified_config = modify_config(config, "model_args.no_wv", True)
+    modified_config = modify_config(config, "save_dir", "./no_wv_low_dim" + str(n_concept))
+    modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
+
+    save_config_file(modified_config, "no_wv_low_dim/" + "config_n" + str(n_concept) +".yaml")
+
+def save_with_wv_low_dim_configs(config):
+    n_concept = config.data_args.n_concept
+    if n_concept >= 9:
+        return 
+    modified_config = modify_config(config, "root_dir", "/net/scratch/yiboj/mem-llm/low")
+    modified_config = modify_config(config, "model_args.no_wv", False)
+    modified_config = modify_config(config, "model_args.dim", 64)
+    modified_config = modify_config(config, "save_dir", "./with_wv_low_dim" + str(n_concept))
+    modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
+
+    save_config_file(modified_config, "with_wv_low_dim/" + "config_n" + str(n_concept) +".yaml")
+
 def save_cluster_configs(config, cluster_n=1):
     n_concept = config.data_args.n_concept
     if n_concept >= 9:
@@ -213,6 +237,16 @@ if __name__ == "__main__":
     else:
         delete_files_in_folder("length")
 
+    if not os.path.exists("no_wv_low_dim"):
+        os.makedirs("no_wv_low_dim")
+    else:
+        delete_files_in_folder("no_wv_low_dim")
+
+    if not os.path.exists("with_wv_low_dim"):
+        os.makedirs("with_wv_low_dim")
+    else:
+        delete_files_in_folder("with_wv_low_dim")
+
     for filname in allfilenames:
         
         config = load_config_file(filname)
@@ -241,3 +275,9 @@ if __name__ == "__main__":
 
         config = load_config_file(filname)
         save_length_configs(config)
+
+        config = load_config_file(filname)
+        save_no_wv_low_dim_configs(config)
+
+        config = load_config_file(filname)
+        save_with_wv_low_dim_configs(config)
