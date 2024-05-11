@@ -82,6 +82,7 @@ def save_no_wv_low_dim_configs(config):
     modified_config = modify_config(config, "model_args.no_wv", True)
     modified_config = modify_config(config, "save_dir", "./no_wv_low_dim" + str(n_concept))
     modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
+    modified_config = modify_config(config, "data_args.seq_len", 128)
 
     save_config_file(modified_config, "no_wv_low_dim/" + "config_n" + str(n_concept) +".yaml")
 
@@ -94,6 +95,7 @@ def save_with_wv_low_dim_configs(config):
     modified_config = modify_config(config, "model_args.dim", 64)
     modified_config = modify_config(config, "save_dir", "./with_wv_low_dim" + str(n_concept))
     modified_config = modify_config(config, "optim_args.learning_rate", 0.01)
+    modified_config = modify_config(config, "data_args.seq_len", 128)
 
     save_config_file(modified_config, "with_wv_low_dim/" + "config_n" + str(n_concept) +".yaml")
 
