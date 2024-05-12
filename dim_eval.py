@@ -154,11 +154,19 @@ if __name__ == '__main__':
         
         values_array[key] = np.average(value)
         ste_array[key] = stats.sem(value)
+        # ste_array[key] = np.std(value)
+        # print(value)
+        # print(np.average(value))
+        # print(stats.sem(value))
+        # print(np.std(value))
+        # print(np.std(value)/np.sqrt(len(value)) )
 
-        print(values_array[key], ste_array[key])
+        # print(values_array[key], ste_array[key])
+
+
 
     plt.figure()
-    print(hamming_cos_dict)
+    # print(hamming_cos_dict)
     plt.ylabel("Inner Products")
     plt.xlabel("Hamming Distance")
     # plt.plot(np.arange(0, ds.n_concept+1), values_array[0:], label='Line 1')
