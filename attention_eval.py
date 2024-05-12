@@ -28,6 +28,20 @@ import argparse
 from misc import get_filenames, angle_estimate, rank_k_approximation
 import matplotlib.pyplot as plt
 
+from matplotlib.font_manager import FontProperties
+
+import matplotlib.pylab as pylab
+params = {'legend.fontsize': 'x-large',
+          'figure.figsize': (8, 6),
+         'axes.labelsize': 'x-large',
+         'xtick.labelsize':'x-large',
+         'ytick.labelsize':'x-large'}
+pylab.rcParams.update(params)
+
+font = FontProperties()
+font.set_family('serif')
+font.set_size('12')
+
 if __name__ == '__main__':
 
     @dataclass
@@ -128,5 +142,9 @@ if __name__ == '__main__':
     matrix = np.random.rand(10, 10)  # Replace this with your matrix
 
     plt.imshow(heat_map, cmap='viridis', interpolation='nearest')
+    plt.xlabel('Tokens', fontsize=20)
+    plt.ylabel('Tokens', fontsize=20)
     plt.colorbar()
     plt.savefig("heat_map_n" + str(ds.n_concept)+".png")
+
+    

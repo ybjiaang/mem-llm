@@ -76,8 +76,8 @@ def save_no_wv_configs(config, config_save_path=None):
 
 if __name__ == "__main__":
 
-    allfilenames = get_filenames("config/dim_freeze_sweep")
-    root_dir = '/net/scratch/yiboj/mem-llm/dim-lr-sweep'
+    allfilenames = get_filenames("config/length")
+    root_dir = 'saved_results/length'
 
     # root_dir = "./"
 

@@ -154,7 +154,8 @@ def save_length_configs(config):
 
     for dim in [16, 32, 64, 128]:
         for lr in [0.01, 0.001]:
-            for length in [8, 16, 24, 32, 40, 48]:
+            # for length in [8, 16, 24, 32, 40, 48]:
+            for length in [16, 32, 64, 128]:
                 modified_config = modify_config(config, "save_dir", "./length_n" + str(n_concept)+ "_d" + str(dim) + "_lr" + str(lr) + "_l" + str(length))
                 modified_config = modify_config(config, "model_args.dim", dim)
                 modified_config = modify_config(config, "data_args.seq_len", length)
