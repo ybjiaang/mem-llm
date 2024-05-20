@@ -132,18 +132,16 @@ if __name__ == '__main__':
 
         heat_map += model.attention.get_attention_heatmap(vocab_embeddings)[0,0,:,:].detach().numpy()
         
+
+    
     heat_map /= len(filenames)
-    print(eval_list)
     print(np.average(eval_list))
     print(stats.sem(eval_list))
 
-
-    # Example matrix
-    matrix = np.random.rand(10, 10)  # Replace this with your matrix
-
-    plt.imshow(heat_map, cmap='viridis', interpolation='nearest')
-    plt.xlabel('Tokens', fontsize=20)
-    plt.ylabel('Tokens', fontsize=20)
+    plt.imshow(heat_map.T, cmap='viridis', interpolation='nearest')
+    plt.xlabel('Key Tokens', fontsize=20)
+    plt.ylabel('Query Tokens', fontsize=20)
+    
     plt.colorbar()
     plt.savefig("heat_map_n" + str(ds.n_concept)+".png")
 

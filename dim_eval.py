@@ -120,8 +120,8 @@ if __name__ == '__main__':
         # Plot the spectrum
         plt.figure()
         plt.plot(singular_values, 'bo')
-        plt.ylabel('Singular Value')
-        plt.title('Spectrum of the Unembeddings')
+        plt.ylabel('Singular Values', fontsize=20)
+        plt.title('Spectrum of Embeddings', fontsize=20)
         plt.grid(True)
         plt.savefig("spectrum_n" + str(ds.n_concept) + "_d" + str(cfg.model_args.dim) + "_e" + str(exp_i) + ".png")
 
