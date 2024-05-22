@@ -74,7 +74,7 @@ plt.fill_between(x, y_gaussian - y_gaussian_err, y_gaussian + y_gaussian_err, al
 
 
 plt.xlabel('Dimensions', fontsize=20)
-plt.ylabel('Average Smallest Principal Angles', fontsize=20)
+plt.ylabel('Average Smallest Principal Angle', fontsize=20)
 # plt.title('M = ' + str(M), fontsize=20)
 plt.grid(True)
 plt.xscale('log')
